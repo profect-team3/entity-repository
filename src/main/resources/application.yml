@@ -3,6 +3,10 @@ spring:
     name: entity-repository
   config:
     import: optional:file:.env[.properties]
+  batch:
+    jdbc:
+      initialize-schema: ALWAYS
+
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
