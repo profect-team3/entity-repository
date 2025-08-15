@@ -12,13 +12,15 @@ java {
         languageVersion = JavaLanguageVersion.of(17)
     }
 }
-//루트에서 돌리기 위해서는 주석필요
+// Intellij 루트에서 돌리기 위해서는 주석 필요
+// 터미널에서 실행시 주석 해제 필요
 //repositories {
 //    mavenCentral()
 //}
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     implementation 'org.springframework.boot:spring-boot-starter-batch'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'

@@ -24,8 +24,12 @@ spring:
         use_sql_comments: true
   data:
     mongodb:
-      uri: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@localhost:27017/?authSource=admin
+      host: localhost
+      port: 27017
       database: store-db
+      username: ${MONGO_INITDB_ROOT_USERNAME}
+      password: ${MONGO_INITDB_ROOT_PASSWORD}
+      authentication-database: admin
 
     redis:
       host: ${REDIS_HOST}
@@ -34,4 +38,4 @@ spring:
       database: 0
 
 server:
-  port: 8080
+  port: 8100
