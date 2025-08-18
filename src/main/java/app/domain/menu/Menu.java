@@ -49,9 +49,5 @@ public class Menu extends BaseEntity {
 	@Builder.Default
 	private boolean hidden = false;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "category_id", nullable = false)
-	private Category category;
-
 }
 
