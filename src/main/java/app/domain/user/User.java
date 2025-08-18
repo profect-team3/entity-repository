@@ -1,10 +1,15 @@
 package app.domain.user;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import app.domain.BaseEntity;
 import app.domain.user.enums.UserRole;
+import app.domain.user.enums.UserSex;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -50,6 +55,13 @@ public class User extends BaseEntity {
 
 	@Column(nullable = false, unique = true, length = 20)
 	private String phoneNumber;
+
+	@Enumerated(EnumType.STRING)
+	@Column
+	private UserSex usersex;
+
+	@Column
+	private LocalDate birthdate;
 
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false, length = 20)
