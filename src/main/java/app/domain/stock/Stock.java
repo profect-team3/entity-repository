@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,5 +38,6 @@ public class Stock extends BaseEntity {
 	@Column(nullable = false, length = 100)
 	private Long stock;
 
-
+	@Version
+	private Long version;
 }
