@@ -151,7 +151,7 @@ with open('dummy_data.sql', 'w', encoding='utf-8') as f:
         user_id = order_info['user_id']
         store_id = order_info['store_id']
         rating = random.randint(1, 5)
-        content = fake.text(max_nb_chars=100)w
+        content = fake.text(max_nb_chars=100)
 
         f.write(
             f"INSERT INTO p_review(created_at, updated_at, rating, user_id, b_order_id, review_id, store_id, content) VALUES "
