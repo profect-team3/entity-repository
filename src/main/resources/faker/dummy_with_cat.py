@@ -115,10 +115,12 @@ with open('dummy_data.sql', 'w', encoding='utf-8') as f:
         email = fake.unique.email()
         phone_number = fake.unique.phone_number()
         password = 'hashed_password_placeholder'
+        usersex = random.choice(['MALE', 'FEMALE'])
+        birthdate = fake.date_of_birth(minimum_age=18, maximum_age=70).strftime('%Y-%m-%d')
 
         f.write(
-            f"INSERT INTO p_user (created_at, updated_at, phone_number, user_role, nickname, real_name, username, email, password) VALUES "
-            f"(now(), now(), '{phone_number}', '{role}', '{nickname}', '{real_name}', '{username}', '{email}', '{password}');\n"
+            f"INSERT INTO p_user (created_at, updated_at, phone_number, user_role, nickname, real_name, username, email, password, usersex, birthdate) VALUES "
+            f"(now(), now(), '{phone_number}', '{role}', '{nickname}', '{real_name}', '{username}', '{email}', '{password}', '{usersex}', '{birthdate}');\n"
         )
     f.write("\n")
 
