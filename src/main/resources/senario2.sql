@@ -57,11 +57,14 @@ VALUES (now(), now(), 'd56e1bb1-a709-4772-b7da-a1b2b88af9c1', '87654321-fedc-ba9
         '꿀맛 허니 콤보',
         23000, FALSE);
 
+-- 재고 추가
+INSERT INTO p_stock ("created_at", "updated_at", "stock_id", "menu_id", "stock", "version")
+VALUES (now(), now(), 'f1e2d3c4-b5a6-7890-abcd-ef1234567890', 'd56e1bb1-a709-4772-b7da-a1b2b88af9c1', 100, 1);
 
-SELECT c.category_id, c.category_name, c.parent_category_id,
-       p1.category_name AS parent_name,
-       p2.category_name AS grandparent_name
-FROM p_category c
-         LEFT JOIN p_category p1 ON c.parent_category_id = p1.category_id
-         LEFT JOIN p_category p2 ON p1.parent_category_id = p2.category_id
-WHERE c.category_name = '브랜드 치킨';
+-- SELECT c.category_id, c.category_name, c.parent_category_id,
+--        p1.category_name AS parent_name,
+--        p2.category_name AS grandparent_name
+-- FROM p_category c
+--          LEFT JOIN p_category p1 ON c.parent_category_id = p1.category_id
+--          LEFT JOIN p_category p2 ON p1.parent_category_id = p2.category_id
+-- WHERE c.category_name = '브랜드 치킨';
