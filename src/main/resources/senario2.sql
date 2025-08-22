@@ -24,7 +24,7 @@ VALUES
 INSERT INTO p_user (created_at, created_by, updated_at, updated_by,
                     phone_number, user_role, nickname, real_name, username, email, password)
 VALUES (now(), NULL, now(), NULL,
-        '010-1111-2222', 'OWNER', 'OwnerKim', '김철수', 'owner_kim', 'owner.kim@example.com', 'hashed_pasㄴ');
+        '010-1111-2222', 'OWNER', 'OwnerKim', '김철수', 'owner_kim', 'owner.kim@example.com', 'hashed_pass');
 
 INSERT INTO p_user (created_at, created_by, updated_at, updated_by,
                     phone_number, user_role, nickname, real_name, username, email, password)
@@ -50,6 +50,9 @@ VALUES (now(), NULL, NULL, NULL, 5000,
         '87654321-fedc-ba98-7654-3210fedcba08', '010-1234-5978', 'BHC 치킨', '서울특별시 강남구 테헤란로 125',
         '매일 신선한 재료로 만드는 치킨 전문점입니다.', 'APPROVE');
 
+-- -- 재고 추가
+-- INSERT INTO p_stock("created_at", "updated_at", "stock", "version", "menu_id", "stock_id")
+-- VALUES (now(), now(), 100, 0, 'd56e1bb1-a709-4772-b7da-a1b2b88af9c1', 'd56e1bb1-a709-4772-b7da-a1b2b88af2c1');
 
 -- 메뉴
 INSERT INTO p_menu ("created_at", "updated_at", "menu_id", "store_id", "name", "description", "price", "is_hidden")
