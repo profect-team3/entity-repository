@@ -1,5 +1,6 @@
 import uuid
 import random
+import csv
 from faker import Faker
 
 # 한국어 데이터를 위한 Faker 초기화
@@ -7,7 +8,7 @@ fake = Faker('ko_KR')
 
 # --- 생성할 데이터 개수 설정 ---
 NUM_CATEGORIES = 10
-NUM_USERS = 100
+NUM_USERS = 10000
 NUM_STORES = 50
 NUM_MENUS_PER_STORE = 20
 NUM_ORDERS = 50  # 생성할 주문 개수
@@ -19,6 +20,9 @@ category_ids_map = {} # 카테고리 이름과 UUID를 매핑하여 저장
 user_ids = list(range(1, NUM_USERS + 1))
 store_ids_map = {} # 가게 UUID와 카테고리 UUID를 매핑하여 저장
 order_ids_map = {} # 주문 UUID와 (유저ID, 가게ID)를 매핑하여 저장
+
+# CSV 파일로 저장할 유저 데이터 리스트
+user_data_list = []
 
 
 # 생성된 SQL 쿼리를 저장할 파일 열기
@@ -65,13 +69,26 @@ with open('dummy_data.sql', 'w', encoding='utf-8') as f:
         nickname = f"{real_name.replace(' ', '')}{user_id}"
         username = fake.unique.user_name()
         email = fake.unique.email()
-        phone_number = fake.unique.phone_number()
-        password = 'hashed_password_placeholder' # 실제 사용 시에는 암호화된 비밀번호 사용
+        phone_number = fake.unique.phone_number().replace('-', '')
+        password = 'password_pla' # 실제 사용 시에는 암호화된 비밀번호 사용
 
+        # SQL 파일에 쓰기
         f.write(
             f"INSERT INTO p_user (created_at, updated_at, phone_number, user_role, nickname, real_name, username, email, password) VALUES "
             f"(now(), now(), '{phone_number}', '{role}', '{nickname}', '{real_name}', '{username}', '{email}', '{password}');\n"
         )
+        
+        # CSV 파일용 데이터 리스트에 추가
+        user_data_list.append({
+            'user_id': user_id,
+            'user_role': role,
+            'real_name': real_name,
+            'nickname': nickname,
+            'username': username,
+            'email': email,
+            'phone_number': phone_number,
+            'password': password
+        })
     f.write("\n")
 
     # --- 4. 가게(Store) 데이터 생성 ---
@@ -159,4 +176,17 @@ with open('dummy_data.sql', 'w', encoding='utf-8') as f:
         )
     f.write("\n")
 
-print(f"'{'dummy_data.sql'}' 파일이 성공적으로 생성되었습니다.")
+# CSV 파일로 유저 데이터 저장
+with open('user_data.csv', 'w', newline='', encoding='utf-8') as csvfile:
+    fieldnames = ['user_id', 'user_role', 'real_name', 'nickname', 'username', 'email', 'phone_number', 'password']
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    
+    # CSV 헤더 작성
+    writer.writeheader()
+    
+    # 유저 데이터 작성
+    for user_data in user_data_list:
+        writer.writerow(user_data)
+
+print(f"'dummy_data.sql' 파일이 성공적으로 생성되었습니다.")
+print(f"'user_data.csv' 파일이 성공적으로 생성되었습니다.")

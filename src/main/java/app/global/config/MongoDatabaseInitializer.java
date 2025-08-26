@@ -5,6 +5,10 @@
 // import org.springframework.data.mongodb.core.index.CompoundIndexDefinition;
 // import org.springframework.data.mongodb.core.index.IndexOperations;
 // import org.springframework.stereotype.Component;
+// import org.springframework.data.mongodb.core.CollectionOptions;
+// import org.springframework.data.mongodb.core.schema.JsonSchemaObject;
+// import org.springframework.data.mongodb.core.schema.JsonSchemaProperty;
+// import org.springframework.data.mongodb.core.schema.JsonSchemaObject.Type;
 //
 // import jakarta.annotation.PostConstruct;
 //
@@ -22,8 +26,15 @@
 //         String collectionName = "stores";
 //
 //         if (!mongoTemplate.collectionExists(collectionName)) {
-//             mongoTemplate.createCollection(collectionName);
-//             System.out.println("MongoDB collection '" + collectionName + "' created.");
+//             // Define schema validation for 'version' field
+//             JsonSchemaObject schema = JsonSchemaObject.builder()
+//                 .required("version") // Make version required
+//                 .properties(JsonSchemaProperty.required("version").ofType(Type.NUMBER)) // Ensure it's a number
+//                 .build();
+//
+//             CollectionOptions options = CollectionOptions.empty().schema(schema);
+//             mongoTemplate.createCollection(collectionName, options);
+//             System.out.println("MongoDB collection '" + collectionName + "' created with schema validation.");
 //         }
 //
 //         IndexOperations indexOps = mongoTemplate.indexOps(collectionName);
