@@ -39,6 +39,72 @@ services:
       - ./.env
     networks:
       - order-network
+
+  kafka:
+    image: apache/kafka:3.9.0
+    container_name: kafka
+    ports:
+      - "9092:9092"     # 외부(호스트) 접근
+      - "29092:29092"   # 내부(도커 네트워크) 접근
+      - "9093:9093"     # KRaft 컨트롤러
+#    environment:
+#      # ---- KRaft 필수 (모두 KAFKA_CFG_* 로!) ----
+#      KAFKA_CFG_NODE_ID: 1
+#      KAFKA_CFG_PROCESS_ROLES: broker,controller
+#
+#      # 리스너(수신/광고) - advertised 에 0.0.0.0 금지
+#      KAFKA_CFG_LISTENERS: PLAINTEXT_EXTERNAL://0.0.0.0:9092,PLAINTEXT_INTERNAL://0.0.0.0:29092,CONTROLLER://0.0.0.0:9093
+#      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT_EXTERNAL://localhost:9092,PLAINTEXT_INTERNAL://kafka:29092
+#      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT_EXTERNAL:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+#      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT_INTERNAL
+#
+#      # 컨트롤러 쿼럼
+#      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+#      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+#
+#      # 로그/복제 (단일 브로커)
+#      KAFKA_CFG_LOG_DIRS: /var/lib/kafka/data
+#      KAFKA_CFG_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+#      KAFKA_CFG_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+#      KAFKA_CFG_TRANSACTION_STATE_LOG_MIN_ISR: 1
+#
+#      # 자동 포맷용 Cluster ID (최초 1회 고정)
+#      CLUSTER_ID: "V0Wk9hJtQf2sLmna4x8B3A"
+
+#    volumes:
+#      - kafka-data:/var/lib/kafka/data
+#    networks: [ order-network ]
+#
+#    command: >
+#      bash -lc "
+#        if [ ! -f /var/lib/kafka/data/meta.properties ]; then
+#          /opt/kafka/bin/kafka-storage.sh format
+#            -t ${CLUSTER_ID:-$$(/opt/kafka/bin/kafka-storage.sh random-uuid)}
+#            -c /opt/kafka/config/kraft/server.properties ;
+#        fi &&
+#        /opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/kraft/server.properties
+#      "
+#
+#  akhq:
+#    image: tchiotludo/akhq:latest
+#    container_name: akhq
+#    ports:
+#      - "9090:8080"   # 브라우저: http://localhost:9090
+#    environment:
+#      AKHQ_CONFIGURATION: |
+#        akhq:
+#          connections:
+#            my-cluster:
+#              properties:
+#                bootstrap.servers: "kafka:29092"  # 내부 주소로 연결
+#    networks:
+#      - order-network
+
 networks:
   order-network:
     driver: bridge
+
+volumes:
+  kafka-data:
+  pg-data:
+  mongo-data:

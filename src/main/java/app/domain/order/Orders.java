@@ -1,24 +1,25 @@
 package app.domain.order;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+import app.domain.BaseEntity;
 import app.domain.order.enums.OrderChannel;
 import app.domain.order.enums.OrderStatus;
 import app.domain.order.enums.PaymentMethod;
+import app.domain.order.enums.PaymentStatus;
 import app.domain.order.enums.ReceiptMethod;
-import app.domain.BaseEntity;
-import app.domain.store.Store;
-import app.domain.user.User;
+import app.domain.order.enums.ValidationStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,35 +28,18 @@ import lombok.NoArgsConstructor;
 @Table(name = "p_orders")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Builder
 public class Orders extends BaseEntity {
-
-	public Orders(UUID ordersId, Store store, User user, Long totalPrice, String deliveryAddress, PaymentMethod paymentMethod, OrderChannel orderChannel, ReceiptMethod receiptMethod, OrderStatus orderStatus, boolean isRefundable, String orderHistory, String requestMessage) {
-		this.ordersId = ordersId;
-		this.store = store;
-		this.user = user;
-		this.totalPrice = totalPrice;
-		this.deliveryAddress = deliveryAddress;
-		this.paymentMethod = paymentMethod;
-		this.orderChannel = orderChannel;
-		this.receiptMethod = receiptMethod;
-		this.orderStatus = orderStatus;
-		this.isRefundable = isRefundable;
-		this.orderHistory = orderHistory;
-		this.requestMessage = requestMessage;
-	}
-
 	@Id
 	@GeneratedValue
 	private UUID ordersId;
 
-	@ManyToOne
-	@JoinColumn(name = "store_id", nullable = false)
-	private Store store;
 
-	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User user; // nullable (오프라인 주문 고려)
+	private UUID storeId;
+
+
+	private Long userId; // nullable (오프라인 주문 고려)
 
 	@Column(nullable = false)
 	private Long totalPrice;
@@ -79,6 +63,12 @@ public class Orders extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private OrderStatus orderStatus;
 
+	@Enumerated(EnumType.STRING)
+	private ValidationStatus validationStatus = ValidationStatus.PENDING;
+
+	@Enumerated(EnumType.STRING)
+	private PaymentStatus paymentStatus = PaymentStatus.PENDING;
+
 	@Column(nullable = false)
 	private boolean isRefundable;
 
@@ -87,5 +77,48 @@ public class Orders extends BaseEntity {
 
 	private String requestMessage;
 
+	public Orders(UUID ordersId, UUID storeId, Long userId, Long totalPrice, String deliveryAddress, PaymentMethod paymentMethod, OrderChannel orderChannel, ReceiptMethod receiptMethod, OrderStatus orderStatus, boolean isRefundable, String orderHistory, String requestMessage) {
+		this.ordersId = ordersId;
+		this.storeId = storeId;
+		this.userId = userId;
+		this.totalPrice = totalPrice;
+		this.deliveryAddress = deliveryAddress;
+		this.paymentMethod = paymentMethod;
+		this.orderChannel = orderChannel;
+		this.receiptMethod = receiptMethod;
+		this.orderStatus = orderStatus;
+		this.isRefundable = isRefundable;
+		this.orderHistory = orderHistory;
+		this.requestMessage = requestMessage;
+	}
+	public void updateOrderStatus(OrderStatus orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	public void updatePaymentStatus(PaymentStatus paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+	public void updateValidationStatus(ValidationStatus validationStatus) {
+		this.validationStatus = validationStatus;
+	}
+
+	public void addHistory(String state, LocalDateTime dateTime) {
+		String newEntry = state + ":" + dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+		if (this.orderHistory == null || this.orderHistory.toString().isEmpty()) {
+			this.orderHistory = newEntry;
+		} else {
+			this.orderHistory = this.orderHistory.toString() + "\n" + newEntry;
+		}
+	}
+
+	public void disableRefund() {
+		this.isRefundable = false;
+	}
+
+	public void updateStatusAndHistory(OrderStatus newStatus, String updatedHistory) {
+		this.orderStatus = newStatus;
+		this.orderHistory = updatedHistory;
+	}
 
 }
