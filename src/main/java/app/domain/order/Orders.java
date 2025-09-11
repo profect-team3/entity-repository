@@ -8,9 +8,7 @@ import app.domain.BaseEntity;
 import app.domain.order.enums.OrderChannel;
 import app.domain.order.enums.OrderStatus;
 import app.domain.order.enums.PaymentMethod;
-import app.domain.order.enums.PaymentStatus;
 import app.domain.order.enums.ReceiptMethod;
-import app.domain.order.enums.ValidationStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,7 +17,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +25,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "p_orders")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Builder
 public class Orders extends BaseEntity {
 	@Id
@@ -63,12 +59,6 @@ public class Orders extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private OrderStatus orderStatus;
 
-	@Enumerated(EnumType.STRING)
-	private ValidationStatus validationStatus = ValidationStatus.PENDING;
-
-	@Enumerated(EnumType.STRING)
-	private PaymentStatus paymentStatus = PaymentStatus.PENDING;
-
 	@Column(nullable = false)
 	private boolean isRefundable;
 
@@ -93,13 +83,6 @@ public class Orders extends BaseEntity {
 	}
 	public void updateOrderStatus(OrderStatus orderStatus) {
 		this.orderStatus = orderStatus;
-	}
-
-	public void updatePaymentStatus(PaymentStatus paymentStatus) {
-		this.paymentStatus = paymentStatus;
-	}
-	public void updateValidationStatus(ValidationStatus validationStatus) {
-		this.validationStatus = validationStatus;
 	}
 
 	public void addHistory(String state, LocalDateTime dateTime) {
