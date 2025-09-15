@@ -1,0 +1,26 @@
+lowercaseOutputName: true
+lowercaseOutputLabelNames: true
+rules:
+  # Topic 단위 초당 카운터
+  - pattern: "kafka.server<type=(.+), name=(.+)PerSec, topic=(.+)><>Count"
+    name: kafka_server_$1_$2_total
+    labels:
+      topic: "$3"
+    type: COUNTER
+
+  # 브로커 전역 초당 카운터
+  - pattern: "kafka.server<type=(.+), name=(.+)PerSec><>Count"
+    name: kafka_server_$1_$2_total
+    type: COUNTER
+
+  # 기본 Count/Value 게이지 매핑
+  - pattern: "kafka.(.+)<type=(.+), name=(.+)><>(Count|Value)"
+    name: kafka_$1_$2_$3
+    type: GAUGE
+
+  # 네트워크/요청 레이턴시 샘플
+  - pattern: "kafka.network<type=RequestMetrics, name=RequestsPerSec, request=(.+)><>Count"
+    name: kafka_network_requests_total
+    labels:
+      request: "$1"
+    type: COUNTER

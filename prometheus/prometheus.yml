@@ -1,0 +1,24 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # Kafka Exporter (토픽/컨슈머/라그)
+  - job_name: 'kafka-exporter'
+    static_configs:
+      - targets: ['kafka-exporter:9308']
+
+  # 브로커 JMX (JVM/네트워크/요청 지표)
+  - job_name: 'kafka-jmx'
+    static_configs:
+      - targets: ['broker1:7071','broker2:7072','broker3:7073']
+
+  # (옵션) 스프링 부트 앱 Micrometer
+  # - job_name: 'app-metrics'
+  #   metrics_path: /actuator/prometheus
+  #   static_configs:
+  #     - targets: ['your-app:8080']
+
+# (옵션) 알림 룰
+# rule_files:
+#   - /etc/prometheus/alerts.yml
