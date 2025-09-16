@@ -170,11 +170,14 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
-    depends_on: [prometheus]
+    depends_on: [prometheus, mongodb]
     ports: ["3000:3000"]
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS=haohanyang-mongodb-datasource
+    volumes:
+      - ./plugins:/var/lib/grafana/plugins
     networks: [order-network]
 
 networks:
